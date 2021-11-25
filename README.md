@@ -1,8 +1,7 @@
 ## Automated installation of VMware ESXi 7.0 via a PXE server, with kickstart
 This configuration is done on a **OpenSUSE server**. Steps can also be applied on other linux distros.
 
-<br>
-###TFTP Server
+## TFTP Server
 Start with installing the TFTP server
 ```bash
 sudo zypper install tftp yast2-tftp-server -y
@@ -20,8 +19,7 @@ sudo systemctl start tftp.socket
 
 For the tftp config look in to the **tftp config in the repo**!
 
-<br>
-###DNSMASQ
+## DNSMASQ
 Next we install the dnsmasq for dhcp server.
 ```bash
 sudo zypper install dnsmasq dnsmasq-utils -y
@@ -35,8 +33,8 @@ sudo systemctl start tftp.socket
 ```
 Again look in the repo for the **dnsmasq config.**
 
-<br>
-###SYSLINUX
+
+## SYSLINUX
 Next on the list is syslinux. First install syslinux.
 
 ```bash
@@ -48,8 +46,8 @@ Then copy everything from the syslinyx directory to the tftpboot directory.
 ```bash
 cp -r /usr/share/syslinux/* /srv/tftpboot
 ```
-<br>
-###HTTP Server
+
+## HTTP Server
 Now we install a http server to host our kickstart files later.
 
 ```bash
@@ -62,8 +60,8 @@ sudo systemctl enable apache2
 sudo systemctl start apache2
 ```
 
-<br>
-###Copying files to TFTP and configuration
+
+## Copying files to TFTP and configuration
 Now we will prepare a installation directory for the ESXi files.
 
 First make a directory which we can mount our ISO file (CD) to.
@@ -80,7 +78,7 @@ or (depends on underlying kernel)
 ```bash
 mount /dev/cdrom /mnt/esxi7
 ```
-<br>
+
 
 Make a directory in the **tftpboot directory** with a **logical name** (ex. esxi7). This is where we copy the esxi files to and will boot from trough pxe.
 ```bash
@@ -118,8 +116,8 @@ We also will change 1 option in the /srv/tftpboot/esxi7/boot.cfg file.
 
 **DO NOT CHANGE ANYTHING ELSE**
 
-<br>
-####PXE Boot menu
+
+### PXE Boot menu
 Next we'll make the PXE Boot menu. This can be used if you configure multiple installers on the server.
 ```bash
 mkdir /srv/tftpboot/pxelinux.cfg
@@ -127,5 +125,5 @@ mkdir /srv/tftpboot/pxelinux.cfg
 ```bash
 touch /srv/tftpboot/pxelinux.cfg/default
 ```
-<br>
-###Will be updated to include Kickstart configuration
+
+### Will be updated to include Kickstart configuration
