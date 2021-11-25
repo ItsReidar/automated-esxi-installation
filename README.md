@@ -1,6 +1,8 @@
 ## Automated installation of VMware ESXi 7.0 via a PXE server, with kickstart
-This configuration is done on a **OpenSUSE server** for ESXi 7.0U1. Steps can also be applied on other linux distros and with different ISO files.
+This configuration is done on a **OpenSUSE server**. Steps can also be applied on other linux distros.
 
+<br>
+###TFTP Server
 Start with installing the TFTP server
 ```bash
 sudo zypper install tftp yast2-tftp-server -y
@@ -17,8 +19,9 @@ sudo systemctl start tftp.socket
 **Make sure** to let UDP port 69 trough in the firewall, or just disable the firewall on the machine **(not recommended)**.
 
 For the tftp config look in to the **tftp config in the repo**!
-<br>
 
+<br>
+###DNSMASQ
 Next we install the dnsmasq for dhcp server.
 ```bash
 sudo zypper install dnsmasq dnsmasq-utils -y
@@ -31,8 +34,9 @@ sudo systemctl enable tftp.socket
 sudo systemctl start tftp.socket
 ```
 Again look in the repo for the **dnsmasq config.**
-<br>
 
+<br>
+###SYSLINUX
 Next on the list is syslinux. First install syslinux.
 
 ```bash
@@ -44,7 +48,8 @@ Then copy everything from the syslinyx directory to the tftpboot directory.
 ```bash
 cp -r /usr/share/syslinux/* /srv/tftpboot
 ```
-
+<br>
+###HTTP Server
 Now we install a http server to host our kickstart files later.
 
 ```bash
@@ -56,7 +61,9 @@ sudo systemctl enable apache2
 ```bash
 sudo systemctl start apache2
 ```
+
 <br>
+###Copying files to TFTP and configuration
 Now we will prepare a installation directory for the ESXi files.
 
 First make a directory which we can mount our ISO file (CD) to.
@@ -104,7 +111,15 @@ sed -i 's#/##g' /srv/tftpboot/esxi7/boot.cfg
 ```bash
 sed -i 's#/##g' /srv/tftpboot/esxi7/efi/boot/boot.cfg
 ```
+Delete the contents of the file and paste the one's from the config in the repo.
 
+We also will change 1 option in the /srv/tftpboot/esxi7/boot.cfg file.
+* prefix=name-of-your-esxi-directory
+
+**DO NOT CHANGE ANYTHING ELSE**
+
+<br>
+####PXE Boot menu
 Next we'll make the PXE Boot menu. This can be used if you configure multiple installers on the server.
 ```bash
 mkdir /srv/tftpboot/pxelinux.cfg
@@ -112,12 +127,5 @@ mkdir /srv/tftpboot/pxelinux.cfg
 ```bash
 touch /srv/tftpboot/pxelinux.cfg/default
 ```
-
-Delete the contents of the file and paste the one's from the config in the repo.
-
-We also will change 1 option in the /srv/tftpboot/esxi7/boot.cfg file.
-* prefix=esxi7
-
-**DO NOT CHANGE ANYTHING ELSE**
-
-To be updated in the future.
+<br>
+###Will be updated to include Kickstart configuration
