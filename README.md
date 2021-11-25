@@ -116,7 +116,7 @@ touch /srv/tftpboot/pxelinux.cfg/default
 Delete the contents of the file and paste the one's from the config in the repo.
 
 We also will change 1 option in the /srv/tftpboot/esxi7/boot.cfg file.
-* prefix=name-of-your-esxi-directory
+* prefix=esxi7
 
 **DO NOT CHANGE ANYTHING ELSE**
 
