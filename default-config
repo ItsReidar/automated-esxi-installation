@@ -1,0 +1,8 @@
+DEFAULT menu.c32
+MENU TITLE Boot Menu
+PROMPT 0
+TIMEOUT 600
+LABEL ESXi 7.0
+  KERNEL /esxi7/mboot.c32
+  APPEND -c /esxi7/boot.cfg
+  MENU LABEL ESXi 7.0
