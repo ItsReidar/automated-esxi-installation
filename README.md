@@ -1,5 +1,5 @@
 ## Automated installation of VMware ESXi 7.0 via a PXE server, with kickstart
-This configuration is done on a **OpenSUSE server**. Steps can also be applied on other linux distros.
+This configuration is done on a **OpenSUSE server** for ESXi 7.0U1. Steps can also be applied on other linux distros and with different ISO files.
 
 Start with installing the TFTP server
 ```bash
