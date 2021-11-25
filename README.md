@@ -12,6 +12,6 @@ sudo systemctl enable tftp.socket
 ```
 Make sure to let UDP port 69 trough in the firewall or just disable the firewall on the machine (not recommended)
 
-For the tftp config look in to the tftp file in the repo!
+For the tftp config look in to the tftp file in the **repo**!
 
 
