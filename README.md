@@ -1,4 +1,4 @@
-## Automated installation of VMware ESXi 7.0 via a PXE server, with kickstart
+## Automated installation of VMware ESXi 7.0 via a tftp server, with kickstart
 This configuration is done on a **OpenSUSE server**. Steps can also be applied on other linux distros.
 
 
