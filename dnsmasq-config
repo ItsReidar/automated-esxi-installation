@@ -7,7 +7,7 @@ log-dhcp
 
 # Respond to PXE requests for the specified network;
 # run as DHCP proxy
-dhcp-range=<ip-of-your-server>,proxy
+dhcp-range=<your-server-ip>,proxy
 #PXE
 dhcp-boot=pxelinux.0
 dhcp-ignore=!known
