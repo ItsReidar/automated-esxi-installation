@@ -1,6 +1,7 @@
 ## Automated installation of VMware ESXi 7.0 via a PXE server, with kickstart
 This configuration is done on a **OpenSUSE server**. Steps can also be applied on other linux distros.
 
+
 ## TFTP Server
 Start with installing the TFTP server
 ```bash
@@ -18,6 +19,7 @@ sudo systemctl start tftp.socket
 **Make sure** to let UDP port 69 trough in the firewall, or just disable the firewall on the machine **(not recommended)**.
 
 For the tftp config look in to the **tftp config in the repo**!
+
 
 ## DNSMASQ
 Next we install the dnsmasq for dhcp server.
@@ -112,7 +114,7 @@ sed -i 's#/##g' /srv/tftpboot/esxi7/efi/boot/boot.cfg
 Delete the contents of the file and paste the one's from the config in the repo.
 
 We also will change 1 option in the /srv/tftpboot/esxi7/boot.cfg file.
-* prefix=name-of-your-esxi-directory
+* prefix=name-of-your-esxi-istallation-folder
 
 **DO NOT CHANGE ANYTHING ELSE**
 
@@ -126,4 +128,13 @@ mkdir /srv/tftpboot/pxelinux.cfg
 touch /srv/tftpboot/pxelinux.cfg/default
 ```
 
-### Will be updated to include Kickstart configuration
+### Kickstart Configuration
+```bash
+mkdir /srv/www/htdocs/ks
+```
+```bash
+touch /srv/www/htdocs/ks/esxi7.cgf
+```
+Then add the config included in this repo and change according to your configuration.
+
+Voila, now your connected system should be able to automatically start a install of esxi 7.0 and configure itself.
