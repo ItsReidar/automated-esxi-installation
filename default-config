@@ -4,5 +4,5 @@ PROMPT 0
 TIMEOUT 600
 LABEL ESXi 7.0
   KERNEL /esxi7/mboot.c32
-  APPEND -c /esxi7/boot.cfg
-  MENU LABEL ESXi 7.0
+  APPEND -c /esxi7/boot.cfg ks=http://172.27.4.3/ks/esxi7.cfg
+  MENU LABEL ^1 Esxi 7.0
