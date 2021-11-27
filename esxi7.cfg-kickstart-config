@@ -91,7 +91,7 @@ esxcli system maintenanceMode set -e true
 # Reboot to apply settings (disabling IPv6)
 esxcli system shutdown reboot -d 15 -r "rebooting after disabling IPv6"
 
-#Extra bullshit
+#Extra bullshit you don't need
 #esxcli network ip netstack add --netstack=vmotion
 #esxcli network ip interface add --interface-name=vmk1 --portgroup-name=vMotion --netstack=vmotion --mtu=9000
 #esxcli network ip interface add --interface-name=vmk2 --portgroup-name=NFS --mtu=9000
