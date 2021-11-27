@@ -6,7 +6,7 @@
 vmaccepteula
 
 # Set the root password for DCUI
-rootpw --iscrypted 1;Azerty!
+rootpw --iscrypted 1Azerty!
 
 # Set License
 serialnum --esx=M428H-VT0DK-P8LG0-05084-19430
@@ -14,8 +14,8 @@ serialnum --esx=M428H-VT0DK-P8LG0-05084-19430
 # Install on the first local disk available on machine
 install --firstdisk --overwritevmfs
 
-# Set the network to Static on the first network adapter
-network --hostname=esxi7-test --device=vmnic0 --bootproto=dhcp
+# Set the network to dhcp on the first network adapter
+network --device=vmnic0 --bootproto=dhcp
 
 # Reboot
 reboot
@@ -33,7 +33,7 @@ reboot
 # Disable IPv6
 esxcli network ip set --ipv6-enabled=false
 
-# Enable SSH & ESXi Shell
+# Enable SSH & ESXi Shell (Only enable for admin purposes)
 vim-cmd hostsvc/enable_esx_shell
 vim-cmd hostsvc/start_esx_shell
 vim-cmd hostsvc/enable_ssh
