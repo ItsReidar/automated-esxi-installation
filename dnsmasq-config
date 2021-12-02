@@ -1,23 +1,37 @@
+#Set interface settings
+port=0
 interface=eth0
-# Disable DNS Server
+
+#Disable DNS Server
 port=0
 
-# Enable DHCP logging
+#Enable DHCP logging
 log-dhcp
 
-# Respond to PXE requests for the specified network;
-# run as DHCP proxy
-dhcp-range=<your-server-ip>,proxy
-#PXE
-dhcp-boot=pxelinux.0
+#Respond to PXE requests for the specified network
+
+#Ignore requests from other devices than the one specified
 dhcp-ignore=!known
 
-# Provide network boot option called "Network Boot".
+# Run as DHCP proxy
+dhcp-range=<your-server-ip>,proxy
 
+#Clients
+dhcp-host=<device-mac-address>, <name>
+
+#Serve BIOS and UEFI PXE clients
+dhcp-boot=pxelinux.0
+dhcp-boot=tag:efi-x86_64,esxi7u3/efi/boot/bootx64.efi
+dhcp-match=tag:efi-x86_64, option:client-arch,7
+dhcp-match=tag:efi-x86_64, option:client-arch,9
+
+# Provide network boot option called "Network Boot" and "ESXI (EFI)".
+pxe-service=X86-64_EFI, "ESXI (EFI)",mboot.efi
+pxe-service=x86PC,"Network Boot",pxelinux
+
+#Enable TFTP
 enable-tftp
 tftp-root=/srv/tftpboot
 
 pxe-prompt="Press F12 for menu.", 10
 
-dhcp-host=<mac-address-of-your-destination-host>, pxe-esxi
-pxe-service=x86PC,"Network Boot",pxelinux
