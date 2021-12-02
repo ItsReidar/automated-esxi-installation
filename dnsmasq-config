@@ -20,18 +20,19 @@ dhcp-range=<your-server-ip>,proxy
 dhcp-host=<device-mac-address>, <name>
 
 #Serve BIOS and UEFI PXE clients
-dhcp-boot=pxelinux.0
-dhcp-boot=tag:efi-x86_64,esxi7u3/efi/boot/bootx64.efi
+dhcp-boot=pxelinux.0,pxeserver,<ip-of-server>
+dhcp-boot=tag:efi-x86_64,esxi7u3/efi/boot/bootx64.efi,pxeserver,<ip-of-server>
 dhcp-match=tag:efi-x86_64, option:client-arch,7
 dhcp-match=tag:efi-x86_64, option:client-arch,9
 
 # Provide network boot option called "Network Boot" and "ESXI (EFI)".
 pxe-service=X86-64_EFI, "ESXI (EFI)",mboot.efi
 pxe-service=x86PC,"Network Boot",pxelinux
+pxe-prompt="Press F12 for menu.", 10
 
 #Enable TFTP
 enable-tftp
 tftp-root=/srv/tftpboot
 
-pxe-prompt="Press F12 for menu.", 10
+
 
