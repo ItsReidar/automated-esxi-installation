@@ -4,61 +4,48 @@
 
 # Accept the VMware End User License Agreement
 vmaccepteula
-
-# Set the root password for DCUI
-rootpw --iscrypted 1Azerty!
-
+# Set the root password for DCUI --iscrypted is a option
+rootpw 1Azerty!
 # Set License
 serialnum --esx=M428H-VT0DK-P8LG0-05084-19430
-
 # Install on the first local disk available on machine
 install --firstdisk --overwritevmfs
-
-# Set the network to dhcp on the first network adapter
-network --device=vmnic0 --bootproto=dhcp
-
+# Set the network to Static on the first network adapter
+network --device=vmnic1 --bootproto=dhcp
 # Reboot
 reboot
-
 ################################################
 ## vSphere ESXi 7.0 Scripted Install - Part 2 ##
 ################################################
 
 # Use busybox interpreter
 %firstboot --interpreter=busybox
-
 # Set DNS Suffix
-#esxcli network ip dns search add --domain=vmlab.local
-
+esxcli network ip dns search add --domain=vmlab.local
 # Disable IPv6
 esxcli network ip set --ipv6-enabled=false
-
-# Enable SSH & ESXi Shell (Only enable for admin purposes)
+# Enable SSH & ESXi Shell
 vim-cmd hostsvc/enable_esx_shell
 vim-cmd hostsvc/start_esx_shell
 vim-cmd hostsvc/enable_ssh
 vim-cmd hostsvc/start_ssh
-
 # Rename Datastore
 vim-cmd hostsvc/datastore/rename datastore1 "Localstore"
-
+# Create subdirectory *Software* in datastore
+mkdir /vmfs/volumes/Localstore/0Software
 # Enable NTP
 echo "server 193.190.198.43" >> /etc/ntp.conf;
 echo "server 193.190.198.14" >> /etc/ntp.conf;
 /sbin/chkconfig ntpd on;
-
 # Create vSwitches
 esxcli network vswitch standard add -v vSwitch0
 esxcli network vswitch standard add -v vSwitch1
-
 # Set vSwitch MTU's
 esxcli network vswitch standard set -v vSwitch0 -m 9000
 esxcli network vswitch standard set -v vSwitch1 -m 9000
-
 # Add Additional NIC to vSwitches
-esxcli network vswitch standard uplink add --uplink-name=vmnic1 --vswitch-name=vSwitch0
-esxcli network vswitch standard uplink add --uplink-name=vmnic1 --vswitch-name=vSwitch1
-
+esxcli network vswitch standard uplink add --uplink-name=vmnic0 --vswitch-name=vSwitch0
+esxcli network vswitch standard uplink add --uplink-name=vmnic0 --vswitch-name=vSwitch1
 # Create Portgroups
 esxcli network vswitch standard portgroup add --portgroup-name=Externen --vswitch-name=vSwitch0
 esxcli network vswitch standard portgroup add --portgroup-name=Examen --vswitch-name=vSwitch0
@@ -68,7 +55,6 @@ esxcli network vswitch standard portgroup add --portgroup-name=A-users --vswitch
 esxcli network vswitch standard portgroup add --portgroup-name=B-users --vswitch-name=vSwitch0
 esxcli network vswitch standard portgroup add --portgroup-name=ALL-VLANS --vswitch-name=vSwitch0
 esxcli network vswitch standard portgroup add --portgroup-name=WAN --vswitch-name=vSwitch1
-
 # Assign VLAN ID's to Portgroups
 esxcli network vswitch standard portgroup set -p Externen --vlan-id 108
 esxcli network vswitch standard portgroup set -p Examen --vlan-id 109
@@ -78,22 +64,18 @@ esxcli network vswitch standard portgroup set -p A-users --vlan-id 112
 esxcli network vswitch standard portgroup set -p B-users --vlan-id 113
 esxcli network vswitch standard portgroup set -p ALL-VLANS --vlan-id 4095
 esxcli network vswitch standard portgroup set -p WAN --vlan-id 0
-
 # Add an extra administrative account
 esxcli system account add -d="LABadmin" -i="admin" -p="1;Azerty!" -c="1;Azerty!"
 esxcli system permission set -i="admin" -r Admin
-
-# Need to add a way to copy ISO files automatically to a subdirectory *Software* in the localstore
-
 # Put host in maintenance mode
 esxcli system maintenanceMode set -e true
-
 # Reboot to apply settings (disabling IPv6)
 esxcli system shutdown reboot -d 15 -r "rebooting after disabling IPv6"
 
-#Extra bullshit you don't need
+
 #esxcli network ip netstack add --netstack=vmotion
 #esxcli network ip interface add --interface-name=vmk1 --portgroup-name=vMotion --netstack=vmotion --mtu=9000
 #esxcli network ip interface add --interface-name=vmk2 --portgroup-name=NFS --mtu=9000
 #esxcli network ip interface ipv4 set --interface-name=vmk1 --ipv4=192.168.10.215 --netmask=255.255.255.0 --type=static
 #esxcli network ip interface ipv4 set --interface-name=vmk2 --ipv4=192.168.5.215 --netmask=255.255.255.0 --type=static
+
