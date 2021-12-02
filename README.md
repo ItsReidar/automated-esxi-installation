@@ -1,140 +1,118 @@
-## Automated installation of VMware ESXi 7.0 via a tftp server, with kickstart
+
+### Automated installation of ESXi 7.0U3 (DNSMASQ, TFTP, HTTP, KICKSTART)
 This configuration is done on a **OpenSUSE server**. Steps can also be applied on other linux distros.
 
+####Prerequisites
 
-## TFTP Server
-Start with installing the TFTP server
+Let's begin with installing the needed services. We will need a dhcp forwarder, tftp-server, syslinux and a webserver.
+
+Install following packages through Yast:
+- tftp
+- yast2-tftp-server
+- dnsmasq
+- syslinux
+- apache2
+
+or through the command line.
 ```bash
-sudo zypper install tftp yast2-tftp-server -y
+sudo zypper install tftp yast2-tftp-server dnsmasq dnsmasq-utils syslinux apache2 -y
 ```
->You can configure the tftp server trough YaST but we'll do a manual configuration of the server.
 
-Next start the service and enable it (so it starts at boot).
-```bash
-sudo systemctl enable tftp.socket
-```
-```bash
-sudo systemctl start tftp.socket
-```
-**Make sure** to let UDP port 69 trough in the firewall, or just disable the firewall on the machine **(not recommended)**.
+####DHCP
+Assuming there's a DHCP server on the network we will just configure a dhcp forwarder. The config file can be found under /etc/dnsmasq.conf
 
-For the tftp config look in to the **tftp config in the repo**!
-
-
-## DNSMASQ
-Next we install the dnsmasq for dhcp server.
-```bash
-sudo zypper install dnsmasq dnsmasq-utils -y
-```
-Again start the service and enable it
+Next enable and start the service:
 ```bash
 sudo systemctl enable dnsmasq
 ```
 ```bash
 sudo systemctl start dnsmasq
 ```
-Again look in the repo for the **dnsmasq config.**
 
+####TFTP
+Configure the TFTP service. The config file can be found under /etc/xinetd.d/tftp.
+>Fill it with the config from the repo.
 
-## SYSLINUX
-Next on the list is syslinux. First install syslinux.
-
+Next enable and start the service:
 ```bash
-sudo zypper install syslinux -y
-```
-
-Then copy everything from the syslinyx directory to the tftpboot directory.
-
-```bash
-cp -r /usr/share/syslinux/* /srv/tftpboot
-```
-
-## HTTP Server
-Now we install a http server to host our kickstart files later.
-
-```bash
-sudo zypper install apache2 -y
+sudo systemctl enable tftp.socket
 ```
 ```bash
-sudo systemctl enable apache2
+sudo systemctl start tftp.socket
 ```
 ```bash
-sudo systemctl start apache2
-```
-
-
-## Copying files to TFTP and configuration
-Now we will prepare a installation directory for the ESXi files.
-
-First make a directory which we can mount our ISO file (CD) to.
-
-```bash
-mkdir /mnt/VMware-VMvisor-Installer-7.0U1c-17325551.x86_64.iso
-```
-
-Then mount the ISO to this directory.
-```bash
-mount /dev/sr0 /mnt/esxi7
-```
-or (depends on underlying kernel)
-```bash
-mount /dev/cdrom /mnt/esxi7
-```
-
-
-Make a directory in the **tftpboot directory** with a **logical name** (ex. esxi7). This is where we copy the esxi files to and will boot from trough pxe.
-```bash
-mkdir /srv/tftpboot/esxi7
-```
-Then copy all the files from the ISO to the directory on the server
-```bash
-cp -rf /mnt/esxi7 /srv/tftpboot/esxi7
-```
-
-If the ISO refuses to mount do the same steps but make the name mount directory exactly the name of the ISO file.
-```bash
-mkdir /mnt/VMware-VMvisor-Installer-7.0U1c-17325551.x86_64.iso
-mount /dev/sr0 /mnt/VMware-VMvisor-Installer-7.0U1c-17325551.x86_64.iso
-mkdir /srv/tftpboot/esxi7
-cp -rf /mnt/VMware-VMvisor-Installer-7.0U1c-17325551.x86_64.iso/* /srv/tftpboot/esxi7/
-```
-
-Don't forget to unmount the ISO.
-```bash
-umount / mnt/VMware-VMvisor-Installer-7.0U1c-17325551.x86_64.iso
-```
-
-Next in the /srv/tftpboot/esxi7 directory we will remove all unecessary "/" from the boot.cfg and efi boot.cfg files.
-```bash
-sed -i 's#/##g' /srv/tftpboot/esxi7/boot.cfg
+sudo systemctl enable xinetd
 ```
 ```bash
-sed -i 's#/##g' /srv/tftpboot/esxi7/efi/boot/boot.cfg
+sudo systemctl start xinetd
 ```
-Delete the contents of the file and paste the one's from the config in the repo.
+And add it to the firewall:
+```bash
+sudo firewall-cmd --zone=public --add-service=tftp --permanent
+```
+```bash
+sudo firewall-cmd --reload
+```
 
-We also will change 1 option in the /srv/tftpboot/esxi7/boot.cfg file.
-* prefix=name-of-your-esxi-istallation-folder
+####Copying the ESXi image files
 
-**DO NOT CHANGE ANYTHING ELSE**
+```bash
+mkdir /mnt/esxi7u3
+```
+```bash
+mkdir /srv/tftpboot/esxi7u3
+```
+```bash
+mount /dev/sr0 /mnt/esxi7u3 (or) mount /dev/cdrom /mnt/esxi7u3 
+```
+```bash
+cp -rf /mnt/esxi7u3 /srv/tftpboot/esxi7u3
+```
+```bash
+umount mnt/esxi7u3
+```
+>We need to remove references to the '/' path in the boot.cfg files
+```bash
+sed -i 's#/##g' /srv/tftpboot/esxi7u3/boot.cfg
+```
+```bash
+sed -i 's#/##g' /srv/tftpboot/esxi7u3/efi/boot/boot.cfg
+```
 
+>Now adjust the configs of both boot.cfg files to the ones in the repo.
 
-### PXE Boot menu
-Next we'll make the PXE Boot menu. This can be used if you configure multiple installers on the server.
+Now we create a mboot.efi file:
+```bash
+cp /srv/tftpboot/esxi7u3/efi/boot/bootx64.efi /srv/tftpboot/esxi7u3/mboot.efi
+```
+And we'll copy these two files to the root of the TFTP server
+```bash
+cp /srv/tftpboot/esxi7u3/boot.cfg /srv/tftpboot/boot.cfg
+```
+```bash 
+cp /srv/tftpboot/esxi7u3/mboot.efi /srv/tftpboot/mboot.efi
+```
+####Legacy PXE Boot menu
 ```bash
 mkdir /srv/tftpboot/pxelinux.cfg
 ```
 ```bash
 touch /srv/tftpboot/pxelinux.cfg/default
 ```
+```bash
+cp /usr/share/syslinux/pxelinux.0 /srv/tftpboot
+```
+```bash
+cp /usr/share/syslinux/menu.c32 /srv/tftpboot
+```
+>Edit the default config file to make a boot menu.
 
-### Kickstart Configuration
+####Kickstart
+Make a ks directory and config in the htdocs directory.
 ```bash
 mkdir /srv/www/htdocs/ks
 ```
 ```bash
 touch /srv/www/htdocs/ks/esxi7.cgf
 ```
-Then add the config included in this repo and change according to your configuration.
-
-Voila, now your connected system should be able to automatically start a install of esxi 7.0 and configure itself.
+>And add the kickstart config from the repo.
