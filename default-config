@@ -5,7 +5,7 @@ PROMPT 0
 TIMEOUT 300
 LABEL ESXi-7.0U3
     KERNEL esxi7u3/mboot.c32
-    APPEND -c esxi7u3/boot.cfg
+    APPEND -c esxi7u3/boot.cfg ks=http://<ip-of-server>/ks/esxi7u3.cfg
     MENU LABEL ESXi-7.0U3 ^Installer
 LABEL hddboot
     LOCALBOOT 0x80
