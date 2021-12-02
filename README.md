@@ -1,4 +1,4 @@
-## Automated installation of ESXi 7.0U3 (DNSMASQ, TFTP, HTTP, KICKSTART)
+## Automated installation of ESXi 7.0U3 (DNSMASQ, TFTP, HTTP, SYSLINUX, KICKSTART)
 This configuration is done on a **OpenSUSE server**. Steps can also be applied on other linux distros.
 
 ####Prerequisites
