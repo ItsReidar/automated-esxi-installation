@@ -28,10 +28,10 @@ sudo zypper install dnsmasq dnsmasq-utils -y
 ```
 Again start the service and enable it
 ```bash
-sudo systemctl enable tftp.socket
+sudo systemctl enable dnsmasq
 ```
 ```bash
-sudo systemctl start tftp.socket
+sudo systemctl start dnsmasq
 ```
 Again look in the repo for the **dnsmasq config.**
 
