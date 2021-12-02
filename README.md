@@ -1,4 +1,3 @@
-
 ### Automated installation of ESXi 7.0U3 (DNSMASQ, TFTP, HTTP, KICKSTART)
 This configuration is done on a **OpenSUSE server**. Steps can also be applied on other linux distros.
 
@@ -18,7 +17,7 @@ or through the command line.
 sudo zypper install tftp yast2-tftp-server dnsmasq dnsmasq-utils syslinux apache2 -y
 ```
 
-####DHCP
+#### DHCP
 Assuming there's a DHCP server on the network we will just configure a dhcp forwarder. The config file can be found under /etc/dnsmasq.conf
 
 Next enable and start the service:
@@ -29,7 +28,7 @@ sudo systemctl enable dnsmasq
 sudo systemctl start dnsmasq
 ```
 
-####TFTP
+#### TFTP
 Configure the TFTP service. The config file can be found under /etc/xinetd.d/tftp.
 >Fill it with the config from the repo.
 
@@ -54,7 +53,7 @@ sudo firewall-cmd --zone=public --add-service=tftp --permanent
 sudo firewall-cmd --reload
 ```
 
-####Copying the ESXi image files
+#### Copying the ESXi image files
 
 ```bash
 mkdir /mnt/esxi7u3
@@ -92,7 +91,8 @@ cp /srv/tftpboot/esxi7u3/boot.cfg /srv/tftpboot/boot.cfg
 ```bash 
 cp /srv/tftpboot/esxi7u3/mboot.efi /srv/tftpboot/mboot.efi
 ```
-####Legacy PXE Boot menu
+
+#### Legacy PXE Boot menu
 ```bash
 mkdir /srv/tftpboot/pxelinux.cfg
 ```
@@ -107,7 +107,7 @@ cp /usr/share/syslinux/menu.c32 /srv/tftpboot
 ```
 >Edit the default config file to make a boot menu.
 
-####Kickstart
+#### Kickstart
 Make a ks directory and config in the htdocs directory.
 ```bash
 mkdir /srv/www/htdocs/ks
