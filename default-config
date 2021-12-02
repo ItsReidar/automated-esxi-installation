@@ -1,8 +1,12 @@
 DEFAULT menu.c32
-MENU TITLE Boot Menu
+MENU TITLE ESXi-7.0U3 Boot Menu
+NOHALT 1
 PROMPT 0
-TIMEOUT 600
-LABEL ESXi 7.0
-  KERNEL /esxi7/mboot.c32
-  APPEND -c /esxi7/boot.cfg ks=http://<your-server-ip>/ks/esxi7.cfg
-  MENU LABEL ^1 Esxi 7.0
+TIMEOUT 300
+LABEL ESXi-7.0U3
+    KERNEL esxi7u3/mboot.c32
+    APPEND -c esxi7u3/boot.cfg
+    MENU LABEL ESXi-7.0U3 ^Installer
+LABEL hddboot
+    LOCALBOOT 0x80
+    MENU LABEL ^Boot from local disk
