@@ -65,7 +65,7 @@ mkdir /srv/tftpboot/esxi7u2
 mount /dev/sr0 /mnt/esxi7u2 (or) mount /dev/cdrom /mnt/esxi7u32
 ```
 ```bash
-cp -rf /mnt/esxi7u2 /srv/tftpboot/esxi7u2
+cp -rf /mnt/esxi7u2/* /srv/tftpboot/esxi7u2
 ```
 ```bash
 umount mnt/esxi7u2
