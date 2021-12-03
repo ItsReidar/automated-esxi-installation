@@ -116,3 +116,10 @@ mkdir /srv/www/htdocs/ks
 touch /srv/www/htdocs/ks/esxi.cgf
 ```
 >And add the kickstart config from the repo.
+Next enable and start the webservice:
+```bash
+sudo systemctl enable apache2
+```
+```bash
+sudo systemctl start apache2
+```
