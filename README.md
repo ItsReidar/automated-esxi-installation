@@ -56,40 +56,40 @@ sudo firewall-cmd --reload
 ### Copying the ESXi image files
 
 ```bash
-mkdir /mnt/esxi7u3
+mkdir /mnt/esxi7u2
 ```
 ```bash
-mkdir /srv/tftpboot/esxi7u3
+mkdir /srv/tftpboot/esxi7u2
 ```
 ```bash
-mount /dev/sr0 /mnt/esxi7u3 (or) mount /dev/cdrom /mnt/esxi7u3 
+mount /dev/sr0 /mnt/esxi7u2 (or) mount /dev/cdrom /mnt/esxi7u32
 ```
 ```bash
-cp -rf /mnt/esxi7u3 /srv/tftpboot/esxi7u3
+cp -rf /mnt/esxi7u2 /srv/tftpboot/esxi7u2
 ```
 ```bash
-umount mnt/esxi7u3
+umount mnt/esxi7u2
 ```
 >We need to remove references to the '/' path in the boot.cfg files
 ```bash
-sed -i 's#/##g' /srv/tftpboot/esxi7u3/boot.cfg
+sed -i 's#/##g' /srv/tftpboot/esxi7u2/boot.cfg
 ```
 ```bash
-sed -i 's#/##g' /srv/tftpboot/esxi7u3/efi/boot/boot.cfg
+sed -i 's#/##g' /srv/tftpboot/esxi7u2/efi/boot/boot.cfg
 ```
 
 >Now adjust the configs of both boot.cfg files to the ones in the repo.
 
 Now we create a mboot.efi file:
 ```bash
-cp /srv/tftpboot/esxi7u3/efi/boot/bootx64.efi /srv/tftpboot/esxi7u3/mboot.efi
+cp /srv/tftpboot/esxi7u2/efi/boot/bootx64.efi /srv/tftpboot/esxi7u2/mboot.efi
 ```
 And we'll copy these two files to the root of the TFTP server
 ```bash
-cp /srv/tftpboot/esxi7u3/boot.cfg /srv/tftpboot/boot.cfg
+cp /srv/tftpboot/esxi7u2/boot.cfg /srv/tftpboot/boot.cfg
 ```
 ```bash 
-cp /srv/tftpboot/esxi7u3/mboot.efi /srv/tftpboot/mboot.efi
+cp /srv/tftpboot/esxi7u2/mboot.efi /srv/tftpboot/mboot.efi
 ```
 
 ### Legacy PXE Boot menu
@@ -113,6 +113,6 @@ Make a ks directory and config in the htdocs directory.
 mkdir /srv/www/htdocs/ks
 ```
 ```bash
-touch /srv/www/htdocs/ks/esxi7.cgf
+touch /srv/www/htdocs/ks/esxi.cgf
 ```
 >And add the kickstart config from the repo.
