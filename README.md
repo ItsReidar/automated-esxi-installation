@@ -126,4 +126,8 @@ sudo systemctl enable apache2
 ```bash
 sudo systemctl start apache2
 ```
+```bash
+chmod -R 755 /srv/www/htdocs/ks && chmod -R 755 /srv/www/htdocs/iso-files
+```
+
 
