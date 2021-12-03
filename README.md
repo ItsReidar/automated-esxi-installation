@@ -1,7 +1,7 @@
 ## Automated installation of ESXi 7.0U3 (DNSMASQ, TFTP, HTTP, SYSLINUX, KICKSTART)
 This configuration is done on a **OpenSUSE server**. Steps can also be applied on other linux distros.
 
-#### Prerequisites
+### Prerequisites
 
 Let's begin with installing the needed services. We will need a dhcp forwarder, tftp-server, syslinux and a webserver.
 
