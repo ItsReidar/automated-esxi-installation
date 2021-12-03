@@ -59,13 +59,22 @@ sudo firewall-cmd --reload
 mkdir /mnt/esxi7u2
 ```
 ```bash
+mkdir /mnt/VMware-VMvisor-Installer-7.0U2a-17867351.x86_64.iso
+```
+```bash
 mkdir /srv/tftpboot/esxi7u2
+```
+```bash
+mkdir /srv/www/htdocs/images
 ```
 ```bash
 mount /dev/sr0 /mnt/esxi7u2 (or) mount /dev/cdrom /mnt/esxi7u32
 ```
 ```bash
 cp -rf /mnt/esxi7u2/* /srv/tftpboot/esxi7u2
+```
+```bash
+cp -rf /mnt/VMware-VMvisor-Installer-7.0U2a-17867351.x86_64.iso /srv/www/htdocs/images
 ```
 ```bash
 umount mnt/esxi7u2
