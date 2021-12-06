@@ -27,6 +27,20 @@ sudo systemctl enable dnsmasq
 ```bash
 sudo systemctl start dnsmasq
 ```
+### Installing the webserver
+Next allow through thefirewall, enable and start the webservice:
+```bash
+sudo firewall-cmd --zone=public --add-service=http --permanent && firewall-cmd --reload
+```
+```bash
+sudo systemctl enable apache2
+```
+```bash
+sudo systemctl start apache2
+```
+```bash
+chmod -R 755 /srv/www/htdocs/ks && chmod -R 755 /srv/www/htdocs/iso-files
+```
 
 ### TFTP
 Configure the TFTP service. The config file can be found under /etc/xinetd.d/tftp.
@@ -125,18 +139,6 @@ mkdir /srv/www/htdocs/ks
 touch /srv/www/htdocs/ks/esxi.cgf
 ```
 >And add the kickstart config from the repo.
-Next allow through thefirewall, enable and start the webservice:
-```bash
-sudo firewall-cmd --zone=public --add-service=http --permanent && firewall-cmd --reload
-```
-```bash
-sudo systemctl enable apache2
-```
-```bash
-sudo systemctl start apache2
-```
-```bash
-chmod -R 755 /srv/www/htdocs/ks && chmod -R 755 /srv/www/htdocs/iso-files
-```
+
 
 
